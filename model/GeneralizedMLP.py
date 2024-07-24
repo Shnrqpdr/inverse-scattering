@@ -25,6 +25,7 @@ class GeneralizedMLP(nn.Module):
         if(num_neurons == -1):
             hidden_neurons = calculate_hidden_neurons(input_size, output_size)
         else:
+            print("Using num_neurons = ", num_neurons)
             hidden_neurons = num_neurons
         
         self.hidden_layers = nn.ModuleList()
@@ -79,6 +80,9 @@ def evaluate_model(model, criterion, test_loader):
             outputs = model(inputs)
             loss = criterion(outputs, targets)
             test_loss += loss.item()
-    print(f'Test Loss: {test_loss/len(test_loader)}')
 
-    return outputs
+    loss = test_loss/len(test_loader)
+    print(f'Test Loss: {loss}')
+
+
+    return outputs, loss
