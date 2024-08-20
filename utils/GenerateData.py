@@ -98,6 +98,9 @@ def circularBarrierCrossSection(gamma,
     n_array = np.arange(n_min, n_max + 1, 1)
     l_array = np.array([])
 
+    delta_k = (k_max - k_min)/points_k
+
+    dataCrossSection = np.zeros((1, points_k + 9))
     for k_value in k:
         soma = 0.0
 
@@ -107,4 +110,24 @@ def circularBarrierCrossSection(gamma,
         it = (-4/k_value)*soma
         l_array = np.append(l_array, it)
 
-    return l_array
+    row_array = np.array([])
+    row_array = np.append(row_array, [M, HBAR, k_min, k_max, delta_k, n_min, n_max, gamma, R])
+    row_array = np.append(row_array, l_array)
+
+    dataCrossSection = np.vstack([dataCrossSection, row_array])
+
+    dataCrossSection = np.delete(dataCrossSection, (0), axis=0)
+
+    initial_columns = ['M', 'HBAR', 'k_min', 'k_max', 'delta_k', 'n_min', 'n_max', 'gamma', 'R']
+
+    # Nomes das outras k_points colunas
+    l_k_columns = [f'l_k{i+1}' for i in range(points_k)]
+
+    # Concatenando todos os nomes de colunas
+    all_columns = initial_columns + l_k_columns
+
+    # Convertendo a matriz para DataFrame
+    df = pd.DataFrame(dataCrossSection, columns=all_columns)
+
+    print(df)
+    return df
